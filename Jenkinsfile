@@ -1,6 +1,7 @@
 pipeline {
     parameters {
         booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
+        booleanParam(name: 'destroyInfrastructure', defaultValue: false, description: 'Destroy infrastructure after apply?')
     }
     environment {
         AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
@@ -13,8 +14,17 @@ pipeline {
             steps {
                 script {
                     dir("terraform") {
-                        // Replace this URL with your repository that contains the Terraform configuration
-                        git "https://github.com/your-repo/Terraform-Jenkins.git"
+                        checkout([
+                            $class: 'GitSCM', 
+                            branches: [[name: '*/main']], 
+                            doGenerateSubmoduleConfigurations: false, 
+                            extensions: [], 
+                            submoduleCfg: [], 
+                            userRemoteConfigs: [[
+                                url: 'https://github.com/your-repo/Terraform-Jenkins.git',
+                                credentialsId: 'github-credentials' // Use the ID of the Jenkins credentials
+                            ]]
+                        ])
                     }
                 }
             }
@@ -54,11 +64,13 @@ pipeline {
         }
 
         stage('Destroy') {
+            when {
+                equals expected: true, actual: params.destroyInfrastructure
+            }
             steps {
                 script {
                     dir("terraform") {
-                        // Destroy all Terraform-managed resources
-                        echo "Destroying all resources..."
+                        input message: "Are you sure you want to destroy the infrastructure?", ok: "Destroy"
                         sh 'terraform destroy -auto-approve'
                     }
                 }
