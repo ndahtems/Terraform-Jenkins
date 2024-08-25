@@ -5,7 +5,7 @@ variable "aws_region" {
 
 variable "my_instance_type" {
   type    = string
-  default = "t2.micro"
+  default = "t2.small"
 }
 
 variable "jenkins-key" {
