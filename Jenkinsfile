@@ -5,7 +5,7 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
     }
     stages {
-        stage('Declarative: Checkout SCM') {
+        stage('Checkout SCM') {
             steps {
                 checkout scm
             }
@@ -51,10 +51,7 @@ pipeline {
     }
     post {
         always {
-            node {
-                cleanWs()
-            }
+            cleanWs()
         }
     }
 }
-
