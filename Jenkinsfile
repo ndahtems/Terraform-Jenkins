@@ -52,3 +52,21 @@ pipeline {
     }
 
   }
+
+
+ stage('Destroy') {
+            steps {
+                script {
+                    dir('terraform') {
+                        sh 'terraform destroy -auto-approve'
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
