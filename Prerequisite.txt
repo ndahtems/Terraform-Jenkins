@@ -9,7 +9,10 @@ Let us detail each step to ensure we can follow along and get everything set up 
     4- Snyk with Jenkins
 
 
-### 1- Integrate your local environment with a GitHub account by generating a public and private key. 
+### 1   Integrate your local env and AWS: Create AWS access ID, and AWS secret access key--> In your terminal run "aws configure"
+        follow the directives to input the data requested by your terminal.
+
+    1b- Integrate your local environment with a GitHub account by generating a public and private key. 
         ssh-keygen. cat the public key, paste it in the GitHub profile settings-ssh&GPG keys-New SSH key and
         paste the public key in the box. This way you have set the configuration of the GitHub account and
         your local environment.
