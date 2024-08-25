@@ -3,9 +3,9 @@ provider "aws" {
 }
 
 resource "aws_instance" "foo" {
-  ami           = "ami-05fa00d4c63e32376" # us-west-2
-  instance_type = "t2.micro"
+  ami           = "ami-0e86e20dae9224db8" # us-east-1
+  instance_type = "t2.medium"
   tags = {
-      Name = "TF-Instance"
+      Name = "jenkins-instance"
   }
 }
