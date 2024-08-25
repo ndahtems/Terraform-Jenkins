@@ -15,8 +15,8 @@ Let us detail each step to ensure we can follow along and get everything set up 
         your local environment.
 
     2-  Integrating Jenkins UI with Github by Generating Personal Access Token Phase 1: 
-        Go to the GitHub UI and click on profile settings-Developers 
-        settings-Personal Acess Token Tokens (Classic)-->Generate new token (classic)-->Give a name and select the scopes 
+        Go to the GitHub UI and click on profile settings-->Developers 
+        settings-->Personal Access Token Tokens (Classic)-->Generate new token (classic)-->Give a name and select the scopes 
         needed for the project you or your team will want GitHub to do. Copy the token and head over to the next stage.
 
     3-  Integrating Jenkins env with the Personal-Access-Token phase 2: 
