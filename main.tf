@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_instance" "ec2-instance" {
-  ami           = "ami-0e86e20dae9224db8" # us-east-1
+  ami           = "ami-0d53d72369335a9d6" # us-west-1
   instance_type = "t2.micro"
   tags = {
       Name = "Jenkins-Instance"
