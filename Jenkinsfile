@@ -1,27 +1,28 @@
+
 pipeline {
-    agent any
+    agent any  // Use any available agent
 
     environment {
-        AWS_ACCESS_KEY_ID     = credentials('aws-access-key-id')  // Jenkins credential with AWS Access Key
-        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key') // Jenkins credential with AWS Secret Key
-        AWS_DEFAULT_REGION    = 'us-west-2'  // Change to your desired region
+        // Define any environment variables here, if needed
+        // Example: AWS credentials ID for use with Terraform
+        AWS_CREDENTIALS_ID = '339712843218'
     }
 
     stages {
-        stage('Checkout') {
+        stage('Checkout SCM') {
             steps {
-                // Checkout the code from your repository
-                git 'https://github.com/rayeeta/Terraform-Jenkins.git'  // Change to your repo
+                // Checkout code from the repository
+                checkout scm
             }
         }
-        
+
         stage('Terraform Init') {
             steps {
                 script {
                     // Initialize Terraform
-                    sh '''
-                    terraform init
-                    '''
+                    withCredentials([aws(credentialsId: "${env.AWS_CREDENTIALS_ID}", region: 'us-west-1')]) {
+                        sh 'terraform init'
+                    }
                 }
             }
         }
@@ -29,21 +30,27 @@ pipeline {
         stage('Terraform Plan') {
             steps {
                 script {
-                    // Run Terraform plan
-                    sh '''
-                    terraform plan -out=tfplan
-                    '''
+                    // Generate Terraform plan
+                    withCredentials([aws(credentialsId: "${env.AWS_CREDENTIALS_ID}", region: 'us-east-1')]) {
+                        sh 'terraform plan -out=tfplan'
+                    }
                 }
+            }
+        }
+
+        stage('Approval') {
+            steps {
+                input message: 'Approve Terraform Plan?', ok: 'Approve'
             }
         }
 
         stage('Terraform Apply') {
             steps {
                 script {
-                    // Apply the Terraform configuration with auto-approval
-                    sh '''
-                    terraform apply -auto-approve tfplan
-                    '''
+                    // Apply the Terraform plan
+                    withCredentials([aws(credentialsId: "${env.AWS_CREDENTIALS_ID}", region: 'us-west-1')]) {
+                        sh 'terraform apply -input=false tfplan'
+                    }
                 }
             }
         }
@@ -51,19 +58,19 @@ pipeline {
 
     post {
         always {
-            // Cleanup Terraform state files, if desired
-            sh '''
-            terraform destroy -auto-approve
-            '''
+            script {
+                // Cleanup workspace or other post-build actions
+                echo 'Cleaning up...'
+                cleanWs()
+            }
         }
 
         success {
-            echo 'EKS cluster provisioned successfully!'
+            echo 'Pipeline succeeded!'
         }
 
         failure {
-            echo 'EKS cluster provisioning failed.'
+            echo 'Pipeline failed!'
         }
     }
 }
-
