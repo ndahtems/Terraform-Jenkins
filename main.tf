@@ -1,12 +1,12 @@
-provider "aws" {
-    region = "us-west-1"  
-}
-
-resource "aws_instance" "ec2-instance" {
-  ami           = "ami-0d53d72369335a9d6" # us-west-1
-  instance_type = "t2.micro"
-  tags = {
-      Name = "EKS-Jenkins-Instance"
+data "aws_ami" "latest-amazon-linux-image" {
+  most_recent = true
+  owners      = ["amazon"]
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+  }
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
   }
 }
-
