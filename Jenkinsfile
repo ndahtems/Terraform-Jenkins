@@ -5,7 +5,7 @@ pipeline {
     environment {
         // Define any environment variables here, if needed
         // Example: AWS credentials ID for use with Terraform
-        AWS_CREDENTIALS_ID = '339712843218'
+        AWS_CREDENTIALS_ID = '953101980331'
     }
 
     stages {
@@ -20,7 +20,7 @@ pipeline {
             steps {
                 script {
                     // Initialize Terraform
-                    withCredentials([aws(credentialsId: "${env.AWS_CREDENTIALS_ID}", region: 'us-west-1')]) {
+                    withCredentials([aws(credentialsId: "${env.AWS_CREDENTIALS_ID}", region: 'eu-central-1')]) {
                         sh 'terraform init'
                     }
                 }
@@ -31,7 +31,7 @@ pipeline {
             steps {
                 script {
                     // Generate Terraform plan
-                    withCredentials([aws(credentialsId: "${env.AWS_CREDENTIALS_ID}", region: 'us-east-1')]) {
+                    withCredentials([aws(credentialsId: "${env.AWS_CREDENTIALS_ID}", region: 'eu-central-1')]) {
                         sh 'terraform plan -out=tfplan'
                     }
                 }
@@ -48,7 +48,7 @@ pipeline {
             steps {
                 script {
                     // Apply the Terraform plan
-                    withCredentials([aws(credentialsId: "${env.AWS_CREDENTIALS_ID}", region: 'us-west-1')]) {
+                    withCredentials([aws(credentialsId: "${env.AWS_CREDENTIALS_ID}", region: 'eu-central-1')]) {
                         sh 'terraform apply -input=false tfplan'
                     }
                 }
